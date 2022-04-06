@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             switch(v.getId()){
-                case R.id.imgViewPhoto:
+                case R.id.impKvitto:
                      startActivity(new Intent(MainActivity.this, ImportReceipts.class));
                      break;
                 case R.id.skannaKvitto:

@@ -4,6 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appGray"
     tools:context=".ImportReceipts">
+
+    <ImageView
+        android:id="@+id/impImgViewPhoto"
+        android:layout_width="318dp"
+        android:layout_height="322dp"
+
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="35dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@color/black" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="297dp"
+        android:layout_height="265dp"
+        android:layout_marginStart="57dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="57dp"
+        android:background="@color/buttonClr"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/impImgViewPhoto">
+
+        <TextView
+            android:id="@+id/importedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/importPic"
+        android:layout_width="128dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/buttonClr"
+        android:text="Importera"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/retake"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/retake"
+        android:layout_width="118dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="79dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/buttonClr"
+        android:text="Spara"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/importPic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,65 @@
 package com.example.rscanner;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.mlkit.vision.common.InputImage;
+
+import java.io.IOException;
 
 public class ImportReceipts extends AppCompatActivity {
+    ImageView imgView;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_receipts);
+        imgView = findViewById(R.id.impImgViewPhoto);
+        textView = findViewById(R.id.importedText);
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},102);
+        }
+        Intent picPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        picPhotoLauncher.launch(picPhoto);
+
     }
+
+    ActivityResultLauncher<Intent> picPhotoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent data = result.getData();
+                    Uri selectedPhoto = data.getData();
+                    imgView.setImageURI(selectedPhoto);
+                    try {
+                        InputImage image = InputImage.fromFilePath(ImportReceipts.this,
+                                selectedPhoto);
+                        String hejsan = new RecognizeText(image).textRecognizer();
+                        System.out.println(hejsan);
+
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+    });
+
+
+
 }

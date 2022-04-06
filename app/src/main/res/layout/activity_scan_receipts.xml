@@ -25,12 +25,12 @@
         android:layout_width="297dp"
         android:layout_height="265dp"
         android:layout_marginStart="49dp"
+        android:layout_marginTop="35dp"
         android:layout_marginEnd="49dp"
-        android:layout_marginBottom="17dp"
         android:background="@color/buttonClr"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgViewPhoto">
 
         <TextView
             android:id="@+id/scannedText"
@@ -40,7 +40,8 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/saveButton"
+
+        android:id="@+id/retakePic"
         android:layout_width="118dp"
         android:layout_height="48dp"
         android:layout_marginStart="79dp"
@@ -50,11 +51,11 @@
         android:text="Ta om"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/retake"
+        app:layout_constraintEnd_toStartOf="@+id/savePic"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/retake"
+        android:id="@+id/savePic"
         android:layout_width="118dp"
         android:layout_height="48dp"
         android:layout_marginStart="17dp"
@@ -65,6 +66,6 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/saveButton" />
+        app:layout_constraintStart_toEndOf="@+id/retakePic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
