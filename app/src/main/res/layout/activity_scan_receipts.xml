@@ -9,49 +9,62 @@
 
     <ImageView
         android:id="@+id/imgViewPhoto"
-        android:layout_width="240dp"
-        android:layout_height="320dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="47dp"
+        android:layout_width="318dp"
+        android:layout_height="322dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="28dp"
+
+        android:layout_marginEnd="44dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/black" />
 
     <ScrollView
-        android:layout_width="313dp"
-        android:layout_height="304dp"
+        android:id="@+id/scrollView2"
+        android:layout_width="297dp"
+        android:layout_height="265dp"
         android:layout_marginStart="49dp"
-        android:layout_marginTop="21dp"
         android:layout_marginEnd="49dp"
         android:layout_marginBottom="17dp"
         android:background="@color/buttonClr"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgViewPhoto">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/scannedText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textColor="#000000" />
     </ScrollView>
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="118dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="156dp"
-        android:layout_marginEnd="156dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="79dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/buttonClr"
+        android:text="Ta om"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/retake"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/retake"
+        android:layout_width="118dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="79dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/buttonClr"
         android:text="Spara"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/saveButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

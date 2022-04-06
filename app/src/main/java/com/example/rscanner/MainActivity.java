@@ -25,13 +25,17 @@ public class MainActivity extends AppCompatActivity {
 
     private View.OnClickListener menuChoice = new View.OnClickListener() {
         public void onClick(View v) {
+
             switch(v.getId()){
-                case R.id.impKvitto:
-                 startActivity(new Intent(MainActivity.this, ImportReceipts.class));
+                case R.id.imgViewPhoto:
+                     startActivity(new Intent(MainActivity.this, ImportReceipts.class));
+                     break;
                 case R.id.skannaKvitto:
                     startActivity(new Intent(MainActivity.this, ScanReceipts.class));
+                    break;
                 case R.id.calcKvitto:
                     System.out.println("Not yet implemented");
+                    break;
 
             }
         }
