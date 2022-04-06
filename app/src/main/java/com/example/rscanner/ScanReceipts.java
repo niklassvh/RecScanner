@@ -43,7 +43,7 @@ public class ScanReceipts extends AppCompatActivity {
             Bundle bundle = data.getExtras();
             Bitmap bitMap = (Bitmap) bundle.get("data");
 
-            //finish();
+            finish();
         }
     });
 }
