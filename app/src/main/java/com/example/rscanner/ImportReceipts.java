@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -14,7 +15,14 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.io.IOException;
 
@@ -48,8 +56,7 @@ public class ImportReceipts extends AppCompatActivity {
                     try {
                         InputImage image = InputImage.fromFilePath(ImportReceipts.this,
                                 selectedPhoto);
-                        String hejsan = new RecognizeText(image).textRecognizer();
-                        System.out.println(hejsan);
+                       textRecognizer(image);
 
                     }
                     catch (IOException e) {
@@ -57,9 +64,26 @@ public class ImportReceipts extends AppCompatActivity {
                     }
 
                 }
-
     });
 
+    public void textRecognizer(InputImage image) {
+        TextRecognizer recognizer = TextRecognition.getClient(
+                TextRecognizerOptions.DEFAULT_OPTIONS);
+        Task<Text> result = recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(Text vText) {
+                String resultText = vText.getText();
+                textView.setText(resultText);
 
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Error in recognizing text");
+            }
+        });
+
+
+    }
 }

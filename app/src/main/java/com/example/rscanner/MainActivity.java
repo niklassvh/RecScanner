@@ -8,19 +8,28 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       TextHandlingTest test = new TextHandlingTest(MainActivity.this);
+        try {
+            test.extractText();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       /*
         Button importReceipt = (Button) findViewById(R.id.impKvitto);
         Button scanReceipt = findViewById(R.id.skannaKvitto);
         Button calculateReceipt = findViewById(R.id.calcKvitto);
         importReceipt.setOnClickListener(menuChoice);
         scanReceipt.setOnClickListener(menuChoice);
         calculateReceipt.setOnClickListener(menuChoice);
-
+*/
     }
 
     private View.OnClickListener menuChoice = new View.OnClickListener() {
