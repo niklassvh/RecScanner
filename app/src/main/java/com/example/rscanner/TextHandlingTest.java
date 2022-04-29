@@ -4,15 +4,8 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,28 +16,24 @@ import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
-import java.io.File;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 public class TextHandlingTest {
     Context context;
     public TextHandlingTest(Context context){
         this.context = context;
     }
-
+    Bitmap b;
     public void extractText () throws IOException {
-
-
         AssetManager amng = context.getAssets();
         InputStream i = amng.open("rec1.jpg");
-        Bitmap b = BitmapFactory.decodeStream(i);
+       /* Bitmap b*/ b = BitmapFactory.decodeStream(i);
         InputImage inputImage = InputImage.fromBitmap(b, 0);
         TextRecognizer recognizer = TextRecognition.getClient(
                 TextRecognizerOptions.DEFAULT_OPTIONS);
@@ -59,60 +48,69 @@ public class TextHandlingTest {
                 System.out.println("Error in recognizing text");
             }
         });
-
     }
-
     public void textHandling(Text text){
-
         ArrayList<String> items = new ArrayList<>();
-        ArrayList<String> price = new ArrayList<>();
+        ArrayList<Double> price = new ArrayList<>();
         String resultText = text.getText();
         for(Text.TextBlock block: text.getTextBlocks()){
-            //String blockText = block.getText();
-           // System.out.println(blockText);
+            String blockText = block.getText();
             for(Text.Line line : block.getLines()){
                 String lineText = line.getText();
-              // System.out.println(lineText);
                 if (isPrice(lineText)) {
-                    price.add(lineText);
+                    String convertToDouble = lineText.replaceAll(",(?=[0-9]+,)", "").replaceAll(",", ".");
+                    price.add(Double.valueOf(convertToDouble));
+                    //System.out.println(convertToDouble);
                 }
                 else if (isNotUsed(lineText)){
 
                 }
                 else{
                     items.add(lineText);
+                    //System.out.println(lineText);
                 }
-
                 for(Text.Element element : line.getElements()) {
-                    //String elementText = element.getText();
-                   // System.out.println(elementText);
+
+                    String elementText = element.getText();
+                   // System.out.println("-------------------");
+                   //System.out.println(elementText);
                 }
             }
-
         }
         System.out.println();
-        for (String prices : price){
-            System.out.println("priser:" + prices);
+        for (Double prices : price){
+            // System.out.println("priser:" + prices);
         }
         for(String item : items){
-            System.out.println("varor: " + item);
+            //System.out.println("varor: " + item);
         }
-        Map<String,String> m = new TreeMap<>();
-        for (int i = 0; i < price.size();i++){
+        Map<String,Double> m = new LinkedHashMap<>();
+       for (int i = 0; i < price.size();i++){
             m.put(items.get(i), price.get(i));
 
         }
         for (String s : m.keySet()){
-            String v = m.get(s);
+           Double v = m.get(s);
             System.out.println(s + "    " + v);
 
+        }
+        JsonWriter writeTextToFile = new JsonWriter(m, this.context);
+        try {
+            writeTextToFile.write();
+        }
+        catch (JSONException js){
+            System.out.println(" error loading json");
+        }
+        catch (IOException e){
+            e.printStackTrace();
         }
 
     }
 
-    public Boolean isPrice(String line)
-    {
-        return line.matches("\\d+(,|\\.)\\d+");
+
+    public Boolean isPrice(String line) {
+
+        return line.matches("-?\\d+(,|\\.)\\d+");
     }
 
     //TODO gör nya metoder för varje regexcheck
@@ -121,6 +119,11 @@ public class TextHandlingTest {
             return true;
         }
         if(line.matches("\\d+ st.*")){
+            return true;
+        }
+        //gör list med alla ord som ej ska med sen.
+        if (line.matches("^ej poänggrundande varor|EJ POANGGRUNDANDE VAROR|RABATTER")){
+
             return true;
         }
 

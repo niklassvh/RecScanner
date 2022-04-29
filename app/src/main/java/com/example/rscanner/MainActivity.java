@@ -11,7 +11,7 @@ import android.widget.Button;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-
+//TODO Cropfunktion,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,14 +22,14 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       /*
+
         Button importReceipt = (Button) findViewById(R.id.impKvitto);
         Button scanReceipt = findViewById(R.id.skannaKvitto);
         Button calculateReceipt = findViewById(R.id.calcKvitto);
         importReceipt.setOnClickListener(menuChoice);
         scanReceipt.setOnClickListener(menuChoice);
         calculateReceipt.setOnClickListener(menuChoice);
-*/
+
     }
 
     private View.OnClickListener menuChoice = new View.OnClickListener() {

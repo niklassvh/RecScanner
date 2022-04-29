@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
-
 public class ScanReceipts extends AppCompatActivity {
     ImageView imgView;
     TextView textView;
@@ -51,6 +51,7 @@ public class ScanReceipts extends AppCompatActivity {
             Intent data = result.getData();
             Bundle bundle = data.getExtras();
             Bitmap bitMap = (Bitmap) bundle.get("data");
+
             imgView.setImageBitmap(bitMap);
             InputImage image = InputImage.fromBitmap(bitMap, 0);
            // finish();
@@ -66,6 +67,7 @@ public class ScanReceipts extends AppCompatActivity {
             @Override
             public void onSuccess(Text vText) {
                 String resultText = vText.getText();
+
                 textView.setText(resultText);
 
 
@@ -82,6 +84,10 @@ public class ScanReceipts extends AppCompatActivity {
 
 
 
+
+
+    }
+    public void cropImage(){
 
     }
 }

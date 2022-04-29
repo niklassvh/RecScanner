@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -52,7 +54,12 @@ public class ImportReceipts extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     Intent data = result.getData();
                     Uri selectedPhoto = data.getData();
+                    //
+                    Bundle bundle = data.getExtras();
+                    Bitmap bitMap = (Bitmap) bundle.get("data");
                     imgView.setImageURI(selectedPhoto);
+                    canvas(bitMap);
+                    //
                     try {
                         InputImage image = InputImage.fromFilePath(ImportReceipts.this,
                                 selectedPhoto);
@@ -83,6 +90,12 @@ public class ImportReceipts extends AppCompatActivity {
                 System.out.println("Error in recognizing text");
             }
         });
+
+
+    }
+
+    public void canvas(Bitmap b) {
+
 
 
     }
