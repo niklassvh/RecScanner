@@ -28,27 +28,17 @@ public class JsonWriter {
     }
 
     public void write() throws JSONException, IOException {
-        JSONObject receiptPost = new JSONObject();
-        JSONObject itemsObject = new JSONObject();
-        receiptPost.put("id", 0);
-        receiptPost.put("user", 1);
-        int count = 1;
-        for(Map.Entry<String, Double> i : items.entrySet()){
+        JSONArray allReceipts = new JSONArray();
+        Receipt rec = new Receipt(items, 1,1);
+        Receipt rec2 = new Receipt(items, 2,2);
 
-            if (count == items.size()){
-                receiptPost.put("sum",i.getValue());
-            }
-            else {
-                itemsObject.put(i.getKey(), i.getValue());
-            }
-            count++;
-
-        }
-        receiptPost.put("items", itemsObject);
+        allReceipts.put(rec.createJsonObject());
+        allReceipts.put(rec2.createJsonObject());
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new
-                File(context.getFilesDir()+File.separator+"JsonData.txt"),true));
-        bufferedWriter.write(receiptPost.toString(2));
+                File(context.getFilesDir()+File.separator+"JsonData.txt")));
+        bufferedWriter.write(allReceipts.toString(2));
         bufferedWriter.close();
+
     }
 
 

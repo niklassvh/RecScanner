@@ -77,4 +77,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/visa"
+        android:layout_width="196dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="128dp"
+        android:layout_marginBottom="183dp"
+        android:backgroundTint="@color/buttonClr"
+        android:text="Visa köp"
+        android:textAllCaps="false"
+        android:textColor="#131313"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calcKvitto" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

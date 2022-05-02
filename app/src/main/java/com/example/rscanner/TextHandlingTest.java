@@ -25,7 +25,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TextHandlingTest {
+
     Context context;
+
     public TextHandlingTest(Context context){
         this.context = context;
     }
@@ -91,7 +93,7 @@ public class TextHandlingTest {
         }
         for (String s : m.keySet()){
            Double v = m.get(s);
-            System.out.println(s + "    " + v);
+          //  System.out.println(s + "    " + v);
 
         }
         JsonWriter writeTextToFile = new JsonWriter(m, this.context);
@@ -104,9 +106,7 @@ public class TextHandlingTest {
         catch (IOException e){
             e.printStackTrace();
         }
-
     }
-
 
     public Boolean isPrice(String line) {
 

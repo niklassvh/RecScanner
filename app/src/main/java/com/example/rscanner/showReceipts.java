@@ -1,4 +1,4 @@
 package com.example.rscanner;
 
-public class ReceiptTextObject {
+public class showReceipts {
 }
