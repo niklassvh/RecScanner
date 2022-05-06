@@ -44,7 +44,6 @@ public class ImportReceipts extends AppCompatActivity {
         Intent picPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         picPhotoLauncher.launch(picPhoto);
-
     }
 
     ActivityResultLauncher<Intent> picPhotoLauncher = registerForActivityResult(

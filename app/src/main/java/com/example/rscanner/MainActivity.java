@@ -1,6 +1,7 @@
 package com.example.rscanner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,31 +11,26 @@ import android.widget.Button;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 //TODO Cropfunktion,
-    @Override
+    RecyclerView recyclerView;
+    CardViewAdapter adapter;
+    List<Receipt> allReceipts;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         JsonReader jr = new JsonReader(MainActivity.this);
-        try {
-           List<Receipt> allReceipts = jr.fillListWithJson();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        try {allReceipts = jr.fillListWithJson();}
+        catch (JSONException e) {e.printStackTrace();}
+        catch (IOException e) {e.printStackTrace();}
 
-      /*  TextHandlingTest test = new TextHandlingTest(MainActivity.this);
-        try {
-            test.extractText();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+      /*TextHandlingTest test = new TextHandlingTest(MainActivity.this);
+        try {test.extractText();}
+        catch (IOException e) {e.printStackTrace();}*/
         Button importReceipt = (Button) findViewById(R.id.impKvitto);
         Button showReceipt = (Button) findViewById(R.id.visa);
         Button scanReceipt = findViewById(R.id.skannaKvitto);
@@ -42,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         importReceipt.setOnClickListener(menuChoice);
         scanReceipt.setOnClickListener(menuChoice);
         calculateReceipt.setOnClickListener(menuChoice);
+        showReceipt.setOnClickListener(menuChoice);
+
 
     }
 
@@ -59,10 +57,15 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Not yet implemented");
                     break;
                 case R.id.visa:
-                    System.out.println("Not yet implemented");
+                    Intent show = new Intent(MainActivity.this, showReceipts.class);
+                    show.putExtra("allReceipts",(Serializable) allReceipts);
+                    startActivity(show);
+                    System.out.println(allReceipts.toString());
                     break;
 
             }
         }
     };
-}
+
+
+    }

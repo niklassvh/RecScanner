@@ -4,14 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Receipt {
-    List<ReceiptItem> items = new ArrayList<>();
+public class Receipt implements Serializable {
+    private List<ReceiptItem> items = new ArrayList<>();
     Integer id;
     Integer usr;
     Double sum = 0.00;
@@ -25,7 +24,7 @@ public class Receipt {
             JSONObject lineKeyVal = arr.getJSONObject(i);
             String key = lineKeyVal.keys().next();
             Double val = lineKeyVal.getDouble(key);
-            items.add(new ReceiptItem(key,val));
+            getItems().add(new ReceiptItem(key,val));
         }
     }
     Receipt(Map<String, Double> map, Integer usr, Integer id) throws JSONException {
@@ -37,14 +36,19 @@ public class Receipt {
                 if (count == map.size()) {
                     sum = i.getValue();
                 } else {
-                    items.add(new ReceiptItem(i.getKey(), i.getValue()));
+                    getItems().add(new ReceiptItem(i.getKey(), i.getValue()));
                 }
                 count++;
         }
     }
-    public class ReceiptItem {
-        String name;
-        Double price;
+
+    public List<ReceiptItem> getItems() {
+        return items;
+    }
+
+    public class ReceiptItem implements Serializable {
+        private String name;
+        private Double price;
 
         ReceiptItem(String name, Double price) {
             this.name = name;
@@ -53,8 +57,15 @@ public class Receipt {
 
         @Override
         public String toString() {
-            return "    name=" + name  +
+            return "    name=" + getName() +
                     " price= " + price + '\n';
+        }
+
+        public String getName() {
+            return name;
+        }
+        public Double getprice() {
+            return price;
         }
     }
 
@@ -64,9 +75,9 @@ public class Receipt {
         receiptPost.put("id", id);
         receiptPost.put("user", usr);
         receiptPost.put("sum", sum);
-        for (ReceiptItem r : items){
+        for (ReceiptItem r : getItems()){
             JSONObject itemsObject = new JSONObject();
-            itemsObject.put(r.name, r.price);
+            itemsObject.put(r.getName(), r.price);
             itemArray.put(itemsObject);
         }
         receiptPost.put("items", itemArray);
@@ -79,7 +90,7 @@ public class Receipt {
         return "{" + '\n' +
                 "id=" + id + '\n' +
                 "usr=" + usr +'\n'+
-                "items=" + '\n' +items +'\n'+
+                "items=" + '\n' + getItems() +'\n'+
                 "sum=" + sum +'\n'+
                 '}'+ '\n';
     }

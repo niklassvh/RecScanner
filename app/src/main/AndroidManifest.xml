@@ -15,7 +15,9 @@
         <activity
             android:name=".ImportReceipts"
             android:exported="false" />
-
+        <activity
+            android:name=".showReceipts"
+            android:exported="false" />
         <activity
 
             android:name=".ScanReceipts"
