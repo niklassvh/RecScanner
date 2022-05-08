@@ -17,23 +17,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonWriter {
-    Map<String, Double> items;
+
+    JSONArray allReceipts = new JSONArray();
     Context context;
-    JsonWriter(Map<String, Double> m, Context c){
-        this.items = m;
+    JsonWriter(Map<String, Double> m, Context c) throws JSONException {
+        Receipt rec = new Receipt(m, 1,1);
+        Receipt rec2 = new Receipt(m, 2,2);
+
+        allReceipts.put(rec.createJsonObject());
+        allReceipts.put(rec2.createJsonObject());
+        this.context = c;
+    }
+
+    JsonWriter(List<Receipt> receipts, Context c) {
         this.context = c;
     }
 
     public void write() throws JSONException, IOException {
-        JSONArray allReceipts = new JSONArray();
-        Receipt rec = new Receipt(items, 1,1);
-        Receipt rec2 = new Receipt(items, 2,2);
 
-        allReceipts.put(rec.createJsonObject());
-        allReceipts.put(rec2.createJsonObject());
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new
                 File(context.getFilesDir()+File.separator+"JsonData.txt")));
         bufferedWriter.write(allReceipts.toString(2));
@@ -41,6 +46,14 @@ public class JsonWriter {
 
     }
 
+    public static void tryWrite(List<Receipt> receiptList, Context c) {
+        try {
+            JsonWriter myWriter = new JsonWriter(receiptList, c);
+            myWriter.write();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

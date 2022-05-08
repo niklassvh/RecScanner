@@ -3,13 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/activity_import_receipts.xml" value="0.2859375" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/activity_main.xml" value="0.2859375" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/activity_scan_receipts.xml" value="0.2859375" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/activity_show_receipts.xml" value="0.2859375" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/cardview.xml" value="0.34010416666666665" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/recycler_view_item.xml" value="0.2859375" />
-        <entry key="..\:/Users/nikla/Desktop/RecScanner/app/src/main/res/layout/recycler_view_item_1.xml" value="0.2859375" />
         <entry key="..\:/Users/nikla/Desktop/Rscan/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1815" />
         <entry key="..\:/Users/nikla/Desktop/Rscan/app/src/main/res/layout/activity_import_receipts.xml" value="0.378125" />
         <entry key="..\:/Users/nikla/Desktop/Rscan/app/src/main/res/layout/activity_main.xml" value="0.33" />
@@ -17,6 +10,8 @@
         <entry key="app/src/main/res/layout/activity_import_receipts.xml" value="0.2609375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_scan_receipts.xml" value="0.2755208333333333" />
+        <entry key="app/src/main/res/layout/activity_show_receipts.xml" value="0.24547101449275363" />
+        <entry key="app/src/main/res/layout/cardview.xml" value="0.33" />
       </map>
     </option>
   </component>

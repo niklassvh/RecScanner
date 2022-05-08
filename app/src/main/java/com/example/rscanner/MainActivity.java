@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         catch (JSONException e) {e.printStackTrace();}
         catch (IOException e) {e.printStackTrace();}
 
+
       /*TextHandlingTest test = new TextHandlingTest(MainActivity.this);
         try {test.extractText();}
         catch (IOException e) {e.printStackTrace();}*/
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent show = new Intent(MainActivity.this, showReceipts.class);
                     show.putExtra("allReceipts",(Serializable) allReceipts);
                     startActivity(show);
-                    System.out.println(allReceipts.toString());
+                   // System.out.println(allReceipts.toString());
                     break;
 
             }

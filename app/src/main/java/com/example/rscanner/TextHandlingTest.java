@@ -34,7 +34,7 @@ public class TextHandlingTest {
     Bitmap b;
     public void extractText () throws IOException {
         AssetManager amng = context.getAssets();
-        InputStream i = amng.open("rec1.jpg");
+        InputStream i = amng.open("rec.jpg");
        /* Bitmap b*/ b = BitmapFactory.decodeStream(i);
         InputImage inputImage = InputImage.fromBitmap(b, 0);
         TextRecognizer recognizer = TextRecognition.getClient(
@@ -93,11 +93,11 @@ public class TextHandlingTest {
         }
         for (String s : m.keySet()){
            Double v = m.get(s);
-          //  System.out.println(s + "    " + v);
+           System.out.println(s + "    " + v);
 
         }
-        JsonWriter writeTextToFile = new JsonWriter(m, this.context);
         try {
+            JsonWriter writeTextToFile = new JsonWriter(m, this.context);
             writeTextToFile.write();
         }
         catch (JSONException js){

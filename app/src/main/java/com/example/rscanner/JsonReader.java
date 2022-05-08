@@ -38,9 +38,9 @@ public class JsonReader {
             allReceipts.add(new Receipt(arr.getJSONObject(i)));
         }
 
-        for (Receipt i : allReceipts){
+      /*  for (Receipt i : allReceipts){
             System.out.println(i.toString());
-        }
+        }*/
         return allReceipts;
     }
 

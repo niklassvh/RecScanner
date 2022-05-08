@@ -50,6 +50,8 @@ public class Receipt implements Serializable {
         private String name;
         private Double price;
 
+        //public transient int id;
+
         ReceiptItem(String name, Double price) {
             this.name = name;
             this.price = price;

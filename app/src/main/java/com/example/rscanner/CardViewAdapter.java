@@ -4,30 +4,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipOutputStream;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewHolder> {
 
     Context context;
     List<Receipt> allReceipts;
-    Integer adapterPos;
+    Integer currentIndex;
 
     public CardViewAdapter(List<Receipt> allReceipts, Context context) {
         this.allReceipts=allReceipts;
@@ -42,15 +36,53 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        System.out.println("position written: " + position);
         Receipt currentReceipt = allReceipts.get(position);
         holder.receipt = currentReceipt;
+       // System.out.println("Pos: " + position);
         holder.usrId.setText("Användare:" + currentReceipt.usr);
+
+        // drop items
+        for(int i = 0; i < holder.textViews.size(); i++) {
+            TextView t = holder.textViews.get(i);
+            holder.linearLayout.removeView(t);
+        }
+        holder.textViews.clear();
+
+        // load items
+        for(int i = 0; i < holder.items.size(); i++) {
+            final int id = i;
+            Receipt.ReceiptItem item = holder.items.get(i);
+            TextView t = new TextView(context);
+            String fullText = item.getName()
+                    + " : "
+                    +item.getprice()
+                    + ":-";
+            t.setText(fullText);
+            t.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextView clicked = (TextView) view;
+                    System.out.println("clicked: " + clicked.getId());
+                    // System.out.println(clicked.getText());
+                    //  clicked.didTouchFocusSelect();
+                    buildAlert(clicked, id, holder);
+
+                }
+            });
+            holder.textViews.add(t);
+            holder.linearLayout.addView(t);
+        }
+
+        /*
         // load items.
         for(int i = 0; i  < holder.items.size();i++) {
-            TextView t = holder.textViews.get(i);
 
+            TextView t = holder.textViews.get(i);
+            holder.linearLayout.removeView(t);
+            System.out.println(holder.textViews.size());
            // t.setTextAppearance(context, android.R.attr.textAppearanceLarge);
-            System.out.println(holder.items.get(i));
+        //    System.out.println(holder.items.get(i));
             String fullText = holder.items.get(i).getName() + " : " + holder.items.get(i).getprice()
                     + ":-";
             t.setText(fullText);
@@ -58,8 +90,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
             holder.linearLayout.addView(t);
 
         }
+        */
         holder.sum.setText("SUMMA: "+  currentReceipt.sum);
         holder.sum.setTypeface(null, Typeface.BOLD);
+       holder.linearLayout.removeView(holder.sum);
         holder.linearLayout.addView(holder.sum);
 
     }
@@ -76,16 +110,24 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         LinearLayout linearLayout;
         List<TextView> textViews = new ArrayList<>();
         List<Receipt.ReceiptItem> items;
+        Button remove;
         public CardViewHolder(@NonNull View holder) {
             super(holder);
             linearLayout = holder.findViewById(R.id.linearLayout);
             usrId = holder.findViewById(R.id.usrid);
-            items = allReceipts.get(getAdapterPosition()+1).getItems();
-            adapterPos = getAdapterPosition()+1;
-
+            remove = holder.findViewById(R.id.remove);
+            System.out.println("getAdapterPosition: " + getAdapterPosition());
+            if(currentIndex == null) {
+                currentIndex = 0;
+            } else {
+                currentIndex++;
+            }
+            items = allReceipts.get(currentIndex).getItems();
+            final CardViewHolder otherHolder = this;
             for (int i = 0; i <items.size(); i++){
                 TextView t = new TextView(context);
                 t.setId(i);
+                //items.get(i).id = i;
                 t.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -93,16 +135,29 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                         System.out.println(clicked.getId());
                        // System.out.println(clicked.getText());
                       //  clicked.didTouchFocusSelect();
-                        buildAlert(clicked, clicked.getId());
+                        buildAlert(clicked, clicked.getId(), otherHolder);
 
                     }
                 });
                 textViews.add(t);
-            }
 
+            }
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (currentIndex != null) {
+                        currentIndex--;
+                        allReceipts.remove(getAdapterPosition());
+                        notifyItemRemoved(getAdapterPosition());
+                        for (Receipt i : allReceipts)
+                            System.out.println(allReceipts);
+
+                    }
+                }
+            });
         }
     }
-    public void buildAlert(TextView clickedText, Integer pos){
+    public void buildAlert(TextView clickedText, Integer pos, @NonNull CardViewHolder holder){
         final Integer finalPos= pos;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Ta bort " + clickedText.getText() + " ?");
@@ -113,7 +168,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                     public void onClick(DialogInterface dialog, int id) {
                         //allReceipts.get(id+1).getItems().get(id+1);
                          System.out.println(finalPos);
-                        deletePost(finalPos);
+                         deletePost(finalPos, holder);
                         dialog.cancel();
                     }
                 });
@@ -131,21 +186,17 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         alert.show();
 
     }
+    public void deletePost(int textViewId, @NonNull CardViewHolder holder){
+        final int receiptIndex = holder.getAdapterPosition();
+        System.out.println("DeletePost: " +  allReceipts.get(currentIndex).getItems().get(textViewId));
+//        allReceipts.get(adapterPos).getItems().remove(textViewId);
 
-    public void deletePost(int textViewId){
-       // allReceipts.get(adapterPos).getItems().get(textViewId);
-        System.out.println("DeletePost: " +  allReceipts.get(adapterPos).getItems().get(textViewId));
-        allReceipts.get(adapterPos).getItems().remove(textViewId);
-        System.out.println("successfully removed" + allReceipts.get(adapterPos).getItems().get(textViewId));
-       notifyDataSetChanged(adapterPos);
+        allReceipts.get(receiptIndex).getItems().remove(textViewId);
 
-
-    }
-
-    private void notifyDataSetChanged(Integer adapterPos) {
-
+        System.out.println("Removal index: " + textViewId);
+        notifyDataSetChanged();
+        JsonWriter.tryWrite(allReceipts, context);
 
     }
-
 
 }
