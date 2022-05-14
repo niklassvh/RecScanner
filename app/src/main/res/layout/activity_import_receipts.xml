@@ -52,11 +52,11 @@
         android:text="Importera"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/retake"
+        app:layout_constraintEnd_toStartOf="@+id/saveImp"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/retake"
+        android:id="@+id/saveImp"
         android:layout_width="118dp"
         android:layout_height="48dp"
         android:layout_marginStart="26dp"

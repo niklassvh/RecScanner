@@ -24,25 +24,48 @@ public class JsonWriter {
 
     JSONArray allReceipts = new JSONArray();
     Context context;
-    JsonWriter(Map<String, Double> m, Context c) throws JSONException {
-        Receipt rec = new Receipt(m, 1,1);
-        Receipt rec2 = new Receipt(m, 2,2);
 
+    JsonWriter(Context c){
+        this.context = c;
+
+    }
+    JsonWriter(Map<String, Double> m, Context c, List<Receipt> receipts) throws JSONException {
+        if(!receipts.isEmpty()) {
+            for (Receipt i : receipts) {
+                allReceipts.put(i.createJsonObject());
+            }
+        }
+        //TODO fix user
+        if (m.size() > 0)
+        {
+            allReceipts.put(new Receipt(m,MainActivity.currentUser,allReceipts.length()).createJsonObject());
+        }
+
+        this.context = c;
+
+    }
+    JsonWriter(Map<String, Double> m, Context c) throws JSONException {
+        Receipt rec = new Receipt(m, 1,0);
+        Receipt rec2 = new Receipt(m, 2,1);
         allReceipts.put(rec.createJsonObject());
         allReceipts.put(rec2.createJsonObject());
         this.context = c;
     }
 
-    JsonWriter(List<Receipt> receipts, Context c) {
+    JsonWriter(List<Receipt> receipts, Context c) throws JSONException {
+        for (Receipt i : receipts){
+            allReceipts.put(i.createJsonObject());
+        }
         this.context = c;
     }
 
-    public void write() throws JSONException, IOException {
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new
-                File(context.getFilesDir()+File.separator+"JsonData.txt")));
+    public void write() throws JSONException, IOException {
+        File file = new File(context.getFilesDir()+File.separator+"JsonData.txt");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
         bufferedWriter.write(allReceipts.toString(2));
         bufferedWriter.close();
+
 
     }
 
@@ -54,8 +77,4 @@ public class JsonWriter {
             e.printStackTrace();
         }
     }
-
-
-
-
 }

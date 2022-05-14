@@ -11,9 +11,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,27 +32,48 @@ import java.io.IOException;
 public class ImportReceipts extends AppCompatActivity {
     ImageView imgView;
     TextView textView;
-
+    Button importPic;
+    Button savePic;
+    Intent picPhoto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_receipts);
         imgView = findViewById(R.id.impImgViewPhoto);
         textView = findViewById(R.id.importedText);
+        importPic = findViewById(R.id.importPic);
+        savePic = findViewById(R.id.saveImp);
+
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},102);
         }
-        Intent picPhoto = new Intent(Intent.ACTION_PICK,
+         picPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         picPhotoLauncher.launch(picPhoto);
+        importPic.setOnClickListener(buttons);
+        savePic.setOnClickListener(buttons);
     }
-
+    View.OnClickListener buttons = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.importPic:
+                    picPhotoLauncher.launch(picPhoto);
+                    break;
+                case R.id.saveImp:
+                    //TODO SPARA texten med jsonwriter
+                    break;
+            }
+        }
+    };
     ActivityResultLauncher<Intent> picPhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Intent data = result.getData();
+                    if(data == null)
+                    {return;}
                     Uri selectedPhoto = data.getData();
                     //
                     Bundle bundle = data.getExtras();
@@ -68,7 +90,6 @@ public class ImportReceipts extends AppCompatActivity {
                     catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
     });
 

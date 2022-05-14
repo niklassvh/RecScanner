@@ -21,28 +21,39 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TextHandlingTest {
+public class TextHandling {
 
     Context context;
-
-    public TextHandlingTest(Context context){
+    Bitmap b;
+    //ta bort sen
+    Map<String, Double>  g = new HashMap<>();
+    public TextHandling(Context context){
         this.context = context;
     }
-    Bitmap b;
-    public void extractText () throws IOException {
+
+    public void extractText () throws IOException, InterruptedException {
+        TextHandling textHandler = this;
         AssetManager amng = context.getAssets();
-        InputStream i = amng.open("rec.jpg");
-       /* Bitmap b*/ b = BitmapFactory.decodeStream(i);
+        InputStream i = amng.open("rec1.jpg");
+        b = BitmapFactory.decodeStream(i);
         InputImage inputImage = InputImage.fromBitmap(b, 0);
         TextRecognizer recognizer = TextRecognition.getClient(
                 TextRecognizerOptions.DEFAULT_OPTIONS);
         Task<Text> result = recognizer.process(inputImage).addOnSuccessListener(new OnSuccessListener<Text>() {
             @Override
             public void onSuccess(Text vText) {
-                textHandling(vText);
+
+              g =  textHandling(vText);
+                try {
+                    JsonWriter wr = new JsonWriter(g,textHandler.context);
+                    wr.write();
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -50,8 +61,11 @@ public class TextHandlingTest {
                 System.out.println("Error in recognizing text");
             }
         });
+        while (!result.isComplete()){
+            Thread.sleep(10);
+        }
     }
-    public void textHandling(Text text){
+    public Map<String, Double> textHandling(Text text){
         ArrayList<String> items = new ArrayList<>();
         ArrayList<Double> price = new ArrayList<>();
         String resultText = text.getText();
@@ -62,41 +76,34 @@ public class TextHandlingTest {
                 if (isPrice(lineText)) {
                     String convertToDouble = lineText.replaceAll(",(?=[0-9]+,)", "").replaceAll(",", ".");
                     price.add(Double.valueOf(convertToDouble));
-                    //System.out.println(convertToDouble);
                 }
                 else if (isNotUsed(lineText)){
-
                 }
                 else{
                     items.add(lineText);
-                    //System.out.println(lineText);
                 }
                 for(Text.Element element : line.getElements()) {
-
                     String elementText = element.getText();
-                   // System.out.println("-------------------");
-                   //System.out.println(elementText);
                 }
             }
         }
-        System.out.println();
-        for (Double prices : price){
+
+      /*  for (Double prices : price){
             // System.out.println("priser:" + prices);
         }
         for(String item : items){
             //System.out.println("varor: " + item);
-        }
+        }*/
+
         Map<String,Double> m = new LinkedHashMap<>();
        for (int i = 0; i < price.size();i++){
             m.put(items.get(i), price.get(i));
-
         }
         for (String s : m.keySet()){
            Double v = m.get(s);
            System.out.println(s + "    " + v);
-
         }
-        try {
+      /*  try {
             JsonWriter writeTextToFile = new JsonWriter(m, this.context);
             writeTextToFile.write();
         }
@@ -105,7 +112,8 @@ public class TextHandlingTest {
         }
         catch (IOException e){
             e.printStackTrace();
-        }
+        }*/
+        return m;
     }
 
     public Boolean isPrice(String line) {

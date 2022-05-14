@@ -3,6 +3,7 @@ package com.example.rscanner;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,15 +22,15 @@ import java.util.List;
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardViewHolder> {
 
     Context context;
-    List<Receipt> allReceipts;
+    List<Receipt> allReceipts = ReceiptListManager.allReceipts;
     Integer currentIndex;
 
-    public CardViewAdapter(List<Receipt> allReceipts, Context context) {
-        this.allReceipts=allReceipts;
+    public CardViewAdapter(Context context) {
         this.context = context;
 
     }
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.cardview, parent, false);
         return new CardViewHolder(view);
@@ -54,11 +56,16 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
             final int id = i;
             Receipt.ReceiptItem item = holder.items.get(i);
             TextView t = new TextView(context);
+            t.setTextColor(Color.BLACK);
             String fullText = item.getName()
                     + " : "
                     +item.getprice()
                     + ":-";
+
             t.setText(fullText);
+            t.didTouchFocusSelect();
+
+
             t.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -93,6 +100,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
         */
         holder.sum.setText("SUMMA: "+  currentReceipt.sum);
         holder.sum.setTypeface(null, Typeface.BOLD);
+        holder.sum.setTextColor(Color.BLACK);
        holder.linearLayout.removeView(holder.sum);
         holder.linearLayout.addView(holder.sum);
 
@@ -149,6 +157,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
                         currentIndex--;
                         allReceipts.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
+                        JsonWriter.tryWrite(allReceipts, context);
                         for (Receipt i : allReceipts)
                             System.out.println(allReceipts);
 
@@ -188,15 +197,22 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.CardVi
     }
     public void deletePost(int textViewId, @NonNull CardViewHolder holder){
         final int receiptIndex = holder.getAdapterPosition();
+        Receipt.ReceiptItem itemToBeChanged =  allReceipts.get(currentIndex).getItems().get(textViewId);
         System.out.println("DeletePost: " +  allReceipts.get(currentIndex).getItems().get(textViewId));
 //        allReceipts.get(adapterPos).getItems().remove(textViewId);
-
-        allReceipts.get(receiptIndex).getItems().remove(textViewId);
-
-        System.out.println("Removal index: " + textViewId);
-        notifyDataSetChanged();
+        Double priceCurrentItem = itemToBeChanged.getprice();
+       if(itemToBeChanged.getName().contains("SUMMERING")){
+            System.out.println("Post is a summary of discounts, skipping value");
+            allReceipts.get(receiptIndex).getItems().remove(textViewId);
+           notifyDataSetChanged();
+        }
+        else{
+           allReceipts.get(receiptIndex).reCalculateSum(priceCurrentItem);
+            allReceipts.get(receiptIndex).getItems().remove(textViewId);
+            System.out.println("Removal index: " + textViewId);
+           notifyDataSetChanged();
+        }
         JsonWriter.tryWrite(allReceipts, context);
-
     }
 
 }

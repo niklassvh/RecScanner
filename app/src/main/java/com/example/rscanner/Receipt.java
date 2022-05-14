@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -95,5 +97,22 @@ public class Receipt implements Serializable {
                 "items=" + '\n' + getItems() +'\n'+
                 "sum=" + sum +'\n'+
                 '}'+ '\n';
+    }
+    public void reCalculateSum(Double newSum)
+    {
+        System.out.println(newSum);
+        Double newVal = 0.00;
+        if(newSum < 0)
+        {
+             newVal = sum + newSum*(-1);
+        }
+        else {
+             newVal = sum - newSum;
+            String.format("%.2f", newVal);
+        }
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        this.sum = Double.valueOf(df.format(newVal).replaceAll(",","."));
+        System.out.println(this.sum);
     }
 }

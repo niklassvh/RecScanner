@@ -23,13 +23,18 @@ public class JsonReader {
     JsonReader(Context context){ this.context =context;}
 
     public List<Receipt> fillListWithJson() throws JSONException, IOException {
-
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(new
-                File(context.getFilesDir()+File.separator+"JsonData.txt")));
+        File file = new File(context.getFilesDir()+File.separator+"JsonData.txt");
+        if(!file.exists()){
+            JsonWriter createFile = new JsonWriter(context);
+            createFile.write();
+            fillListWithJson();
+        }
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         StringBuilder sb = new StringBuilder();
         String line;
         while((line = bufferedReader.readLine()) != null){
             sb.append(line);
+            System.out.println(line);
     }
         JSONArray arr = new JSONArray(sb.toString());
         List<Receipt> allReceipts = new ArrayList<>();
