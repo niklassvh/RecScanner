@@ -1,7 +1,6 @@
 package com.example.rscanner;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,28 +8,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-//TODO Cropfunktion,
-    RecyclerView recyclerView;
-    CardViewAdapter adapter;
     Button usrButton;
-  // static List<Receipt> allReceipts;
-   static Integer currentUser = 0;
+    static Integer currentUser = 0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+       setContentView(R.layout.activity_main);
         Button importReceipt = (Button) findViewById(R.id.impKvitto);
         Button showReceipt = (Button) findViewById(R.id.visa);
         usrButton = (Button) findViewById(R.id.userbutton);
@@ -50,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // för rec1bilden
-        /*TextHandling th = new TextHandling(MainActivity.this);
+        TextHandler th = new TextHandler(MainActivity.this);
         try {
             th.extractText();
 
@@ -59,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (InterruptedException i){
 
-        }*/
+        }
 
     }
     @Override
@@ -82,13 +72,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.visa:
                     ReceiptListManager.loadList(MainActivity.this);
-                    //JsonReader jr = new JsonReader(MainActivity.this);
-
-                /*    try {allReceipts = jr.fillListWithJson();System.out.println(allReceipts.toString());}
-
-                    catch (JSONException e) {e.printStackTrace();}
-                    catch (IOException e) {e.printStackTrace();}*/
-                   // System.out.println(allReceipts);
                     Intent show = new Intent(MainActivity.this, showReceipts.class);
                     show.putExtra("allReceipts",(Serializable) ReceiptListManager.allReceipts);
                     startActivity(show);
@@ -118,13 +101,15 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(usr2);
                 }
             }
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             if ( usr1 < usr2){
 
-                builder.setMessage("Användare 1 är skyldid Användare 2 (" + (usr2 - usr1)/2 + ":-)");
+                builder.setMessage("Användare 1 är skyldig Användare 2 (" + (usr2 - usr1)/2 + ":-)");
             }
             if ( usr2 < usr1){
-                builder.setMessage("Användare 2 är skyldid Användare 1 (" + (usr1 - usr2)/2 + ":-)");
+                builder.setMessage("Användare 2 är skyldig Användare 1 (" + (usr1 - usr2)/2 + ":-)");
              }
             if(usr1 == usr2){
                  builder.setMessage("Ingen användare är skyldig pengar");

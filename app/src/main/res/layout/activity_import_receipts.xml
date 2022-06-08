@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     android:background="@color/appGray"
     tools:context=".ImportReceipts">
-
+    <com.oginotihiro.cropview.CropView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cropView" />
     <ImageView
         android:id="@+id/impImgViewPhoto"
         android:layout_width="318dp"
@@ -29,7 +32,7 @@
         android:layout_marginStart="57dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="57dp"
-        android:background="@color/buttonClr"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/impImgViewPhoto">

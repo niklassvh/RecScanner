@@ -8,17 +8,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
+
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +30,7 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
 
 import org.json.JSONException;
 
@@ -50,7 +53,6 @@ public class ScanReceipts extends AppCompatActivity {
         textView = findViewById(R.id.scannedText);
         retake = findViewById(R.id.retakePic);
         savePic = findViewById(R.id.savePic);
-       // TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
         }
@@ -58,7 +60,6 @@ public class ScanReceipts extends AppCompatActivity {
         takePicLauncher.launch(takePic);
         retake.setOnClickListener(buttons);
         savePic.setOnClickListener(buttons);
-
 
     }
     View.OnClickListener buttons = new View.OnClickListener() {
@@ -70,7 +71,8 @@ public class ScanReceipts extends AppCompatActivity {
                     break;
                 case R.id.savePic:
                     try {
-                        JsonWriter write = new JsonWriter(m,getApplicationContext(), ReceiptListManager.allReceipts);
+                        JsonWriter write = new JsonWriter(m,getApplicationContext(),
+                                ReceiptListManager.allReceipts);
                         write.write();
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();
@@ -83,43 +85,32 @@ public class ScanReceipts extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
         @Override
-        //TODO fixa image rotation
         public void onActivityResult(ActivityResult result) {
             Intent data = result.getData();
             if(data == null)
             {return;}
             Bundle bundle = data.getExtras();
             Bitmap bitMap = (Bitmap) bundle.get("data");
-            //Rotera bild som visas i imgview
-            //TODO fixa image rotation för snea bilder också.
-            //TODO kolla om det är värt att lägga in cropping för kvittona
             Bitmap rotatedBitMap = Bitmap.createBitmap(bitMap,0,0,bitMap.getWidth(),
-                    bitMap.getHeight(), setImageRotation(imgView), true);
+                    bitMap.getHeight(), setImageRotation(bitMap), true);
             imgView.setImageBitmap(rotatedBitMap);
-            // läs text vertikal vinkel
             InputImage image = InputImage.fromBitmap(bitMap, 90);
-            // finish();
-            textRecognizer(image);
-
+            textProcessing(image);
 
         }
     });
-
-    public void textRecognizer(InputImage image){
+    public void textProcessing(InputImage image){
         TextRecognizer recognizer = TextRecognition.getClient(
                 TextRecognizerOptions.DEFAULT_OPTIONS);
         Task<Text> result = recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
             @Override
             public void onSuccess(Text vText) {
-
                 String resultText = vText.getText();
-                TextHandling textHandler = new TextHandling(getApplicationContext());
+                TextHandler textHandler = new TextHandler(getApplicationContext());
                  m = textHandler.textHandling(vText);
                 mapToString mps = new mapToString(m);
                 System.out.println(mps.getSb());
                 textView.setText(new mapToString(m).getSb().toString());
-
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -129,13 +120,10 @@ public class ScanReceipts extends AppCompatActivity {
         });
 
     }
-    public Matrix setImageRotation(ImageView img){
+    public Matrix setImageRotation(Bitmap img){
         Matrix matrix = new Matrix();
         matrix.postRotate(90,img.getWidth(),img.getHeight());
         return matrix;
-    }
-    public void cropImage(){
-
     }
 
 }

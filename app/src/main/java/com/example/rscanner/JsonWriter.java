@@ -35,7 +35,6 @@ public class JsonWriter {
                 allReceipts.put(i.createJsonObject());
             }
         }
-        //TODO fix user
         if (m.size() > 0)
         {
             allReceipts.put(new Receipt(m,MainActivity.currentUser,allReceipts.length()).createJsonObject());

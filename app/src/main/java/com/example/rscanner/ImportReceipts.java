@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,8 +27,15 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+import com.oginotihiro.cropview.Crop;
+import com.oginotihiro.cropview.CropView;
 
+import org.json.JSONException;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ImportReceipts extends AppCompatActivity {
     ImageView imgView;
@@ -35,6 +43,8 @@ public class ImportReceipts extends AppCompatActivity {
     Button importPic;
     Button savePic;
     Intent picPhoto;
+    Context cont = this;
+    Map<String,Double> m = new LinkedHashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +71,12 @@ public class ImportReceipts extends AppCompatActivity {
                     picPhotoLauncher.launch(picPhoto);
                     break;
                 case R.id.saveImp:
-                    //TODO SPARA texten med jsonwriter
+                    try {
+                        JsonWriter write = new JsonWriter(m,getApplicationContext(), ReceiptListManager.allReceipts);
+                        write.write();
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
@@ -74,12 +89,11 @@ public class ImportReceipts extends AppCompatActivity {
                     Intent data = result.getData();
                     if(data == null)
                     {return;}
+
                     Uri selectedPhoto = data.getData();
-                    //
-                    Bundle bundle = data.getExtras();
-                    Bitmap bitMap = (Bitmap) bundle.get("data");
+                    Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
+
                     imgView.setImageURI(selectedPhoto);
-                    canvas(bitMap);
                     //
                     try {
                         InputImage image = InputImage.fromFilePath(ImportReceipts.this,
@@ -100,7 +114,9 @@ public class ImportReceipts extends AppCompatActivity {
             @Override
             public void onSuccess(Text vText) {
                 String resultText = vText.getText();
-                textView.setText(resultText);
+                TextHandler textHandler = new TextHandler(getApplicationContext());
+                m = textHandler.textHandling(vText);
+                textView.setText(new mapToString(m).getSb().toString());
 
 
             }
@@ -114,9 +130,7 @@ public class ImportReceipts extends AppCompatActivity {
 
     }
 
-    public void canvas(Bitmap b) {
 
 
 
     }
-}
